@@ -30,7 +30,6 @@ public class Customer {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_pinmgt_id")
+	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
 	private PinMgt mPin;
 }

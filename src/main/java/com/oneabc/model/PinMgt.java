@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class PinMgt {
 	@Column(name = "ACTIVE")
 	private boolean active;
 
-	@OneToOne(mappedBy = "mPin", cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_cust_id")
 	private Customer customer;
 }

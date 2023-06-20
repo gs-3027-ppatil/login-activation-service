@@ -1,6 +1,7 @@
 package com.oneabc.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,30 +21,33 @@ import com.oneabc.api.model.UpdateMpinRequestVO;
 import com.oneabc.model.Customer;
 import com.oneabc.model.PinMgt;
 import com.oneabc.repository.CustomerRepository;
+import com.oneabc.repository.PinMgtRepository;
 
 @Service
 public class LoginServiceImpl implements LoginService {
-	static int attemptCount = 0;
+//	static int attemptCount = 0;
 
 	@Autowired
 	private CustomerRepository customerRepository;
+	@Autowired
+	private PinMgtRepository pinMgtRepository;
 
 	@Override
 	public OtpResponseVO sendOtp(String mobileNumber) {
 
 		if (isValidMobileNumber(mobileNumber)) {
 
-			if (attemptCount <= 2) {
+//			if (attemptCount <= 2) {
 				OtpResponseVO res = createLoginResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),
 						"123456");
-				attemptCount++;
+//				attemptCount++;
 //				throw new OtpServiceException(HttpStatus.NOT_IMPLEMENTED.value(), "ABC");
 				return res;
-			} else {
-				OtpResponseVO res = createLoginResponse(HttpStatus.TOO_MANY_REQUESTS.value(),
-						"Too many attempts for OTP", null);
-				return res;
-			}
+//			} else {
+//				OtpResponseVO res = createLoginResponse(HttpStatus.TOO_MANY_REQUESTS.value(),
+//						"Too many attempts for OTP", null);
+//				return res;
+//			}
 		} else {
 			OtpResponseVO res = createLoginResponse(HttpStatus.BAD_REQUEST.value(), "Please enter valid mobile number",
 					null);
@@ -93,7 +97,11 @@ public class LoginServiceImpl implements LoginService {
 	public ResponseVO verifyOtp(OtpVerificationRequestVO otpVerificationRequestVO) {
 		if (otpVerificationRequestVO != null && isValidOtp(otpVerificationRequestVO.getOtp())
 				&& isValidMobileNumber(otpVerificationRequestVO.getMobileNumber())) {
-			return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
+			if(otpVerificationRequestVO.getOtp().equals("123456")) {
+				return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
+			} else {
+				return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Invalid OTP");
+			}
 		} else {
 			return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Mobile number or OTP entered is incorrect");
 		}
@@ -122,9 +130,9 @@ public class LoginServiceImpl implements LoginService {
 			PinMgt mpin = new PinMgt();
 			mpin.setActive(true);
 			mpin.setCurrentMpin(hashedMpin);
-			Customer customerFromDb = customer.get();
-			customerFromDb.setMPin(mpin);
-			customerRepository.save(customerFromDb);
+			mpin.setMpinExpiry(new Date());
+			mpin.setCustomer(customer.get());
+			pinMgtRepository.save(mpin);
 			return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
 		} else {
 			return new ResponseVO(HttpStatus.NOT_FOUND.value(), "Customer does not exist");
