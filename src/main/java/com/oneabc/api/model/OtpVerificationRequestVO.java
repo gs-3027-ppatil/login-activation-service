@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class OtpVerificationRequestVO {
 	private String mobileNumber;
-	private String Otp;
+	private String otp;
 }

@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oneabc.api.model.CreateMpinRequestVO;
 import com.oneabc.api.model.OtpResponseVO;
 import com.oneabc.api.model.OtpVerificationRequestVO;
-import com.oneabc.api.model.ResetMpinRequestVO;
+import com.oneabc.api.model.UpdateMpinRequestVO;
 import com.oneabc.api.model.ResponseVO;
+import com.oneabc.api.model.SaveCustomerRequestVO;
 import com.oneabc.service.LoginService;
 
 @RestController
@@ -35,15 +36,21 @@ public class LoginController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/customer")
+	public ResponseEntity<ResponseVO> saveCustomer(@RequestBody SaveCustomerRequestVO saveCustomerRequestVO) {
+		ResponseVO response = loginService.saveCustomer(saveCustomerRequestVO);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/mpin")
 	public ResponseEntity<ResponseVO> setMpin(@RequestBody CreateMpinRequestVO createMpinRequestVO) {
 		ResponseVO response = loginService.setMpin(createMpinRequestVO);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/mpin/reset")
-	public ResponseEntity<ResponseVO> forgotMpin(@RequestBody ResetMpinRequestVO resetMpinRequestVO) {
-		ResponseVO response = loginService.resetMpin(resetMpinRequestVO);
+	@PostMapping(value = "/mpin/update")
+	public ResponseEntity<ResponseVO> updateMpin(@RequestBody UpdateMpinRequestVO updateMpinRequestVO) {
+		ResponseVO response = loginService.updateMpin(updateMpinRequestVO);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

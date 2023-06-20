@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CreateMpinRequestVO {
-	private String customerId;
-	private String mobilePin;
+	private Long customerId;
+	private String mpin;
 }
