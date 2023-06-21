@@ -26,13 +26,13 @@ public class PinMgt {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = "CURRENTMPIN")
+	@Column(name = "current_mpin")
 	private String currentMpin;
 
-	@Column(name = "MPIN_EXP")
+	@Column(name = "mpin_exp")
 	private Date mpinExpiry;
 
-	@Column(name = "ACTIVE")
+	@Column(name = "active")
 	private boolean active;
 
 	@OneToOne(cascade = CascadeType.ALL)
