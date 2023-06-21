@@ -22,16 +22,28 @@ import lombok.NoArgsConstructor;
 @Table(name = "T_PINMGT")
 public class PinMgt {
 	@Id
-	@Column(name = "pinmgt_id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = "current_mpin")
+	@Column(name = "currentMpin")
 	private String currentMpin;
 
-	@Column(name = "mpin_exp")
+	@Column(name = "mpinExpiry")
 	private Date mpinExpiry;
 
+	@Column(name = "createdBy")
+	private String createdBy;
+
+	@Column(name = "createdDate")
+	private Date createdDate;
+	
+	@Column(name = "modifiedDate")
+	private Date modifiedDate;
+
+	@Column(name = "modifiedBy")
+	private String modifiedBy;
+	
 	@Column(name = "active")
 	private boolean active;
 

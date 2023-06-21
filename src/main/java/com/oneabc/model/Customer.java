@@ -20,16 +20,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "T_CUSTOMER")
 public class Customer {
 	@Id
-	@Column(name = "cust_id")
+	@Column(name = "custId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long custId;
 
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "mobile_number")
+	@Column(name = "mobileNumber")
 	private String mobileNumber;
 
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-	private PinMgt mPin;
+	private PinMgt mpin;
 }
