@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oneabc.api.model.CreateMpinRequestVO;
 import com.oneabc.api.model.OtpResponseVO;
 import com.oneabc.api.model.OtpVerificationRequestVO;
-import com.oneabc.api.model.UpdateMpinRequestVO;
 import com.oneabc.api.model.ResponseVO;
-import com.oneabc.api.model.SaveCustomerRequestVO;
+import com.oneabc.api.model.UpdateMpinRequestVO;
 import com.oneabc.service.LoginService;
 
 @RestController
-@RequestMapping("/oneabc")
+@RequestMapping("/login")
 public class LoginController {
 	@Autowired
 	private LoginService loginService;
@@ -35,12 +35,6 @@ public class LoginController {
 		ResponseVO response = loginService.verifyOtp(otpVerificationRequestVO);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
-	@PostMapping(value = "/customer")
-	public ResponseEntity<ResponseVO> saveCustomer(@RequestBody SaveCustomerRequestVO saveCustomerRequestVO) {
-		ResponseVO response = loginService.saveCustomer(saveCustomerRequestVO);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
 	
 	@PostMapping(value = "/mpin")
 	public ResponseEntity<ResponseVO> setMpin(@RequestBody CreateMpinRequestVO createMpinRequestVO) {
@@ -48,7 +42,7 @@ public class LoginController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/mpin/update")
+	@PatchMapping(value = "/mpin/update")
 	public ResponseEntity<ResponseVO> updateMpin(@RequestBody UpdateMpinRequestVO updateMpinRequestVO) {
 		ResponseVO response = loginService.updateMpin(updateMpinRequestVO);
 		return new ResponseEntity<>(response, HttpStatus.OK);
