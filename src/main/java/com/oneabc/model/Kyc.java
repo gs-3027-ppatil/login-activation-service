@@ -109,7 +109,6 @@ public class Kyc {
 
 	public Kyc() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Kyc(long id, Customer customer, String permanentAddress, String digilockerStatus,

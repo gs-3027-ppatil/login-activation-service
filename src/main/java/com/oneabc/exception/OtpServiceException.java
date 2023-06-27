@@ -12,11 +12,12 @@ public class OtpServiceException extends RuntimeException {
 	private String message;
 
 	public OtpServiceException(int statusCode, String message) {
+		super(message);
 		this.statusCode = statusCode;
 		this.message = message;
 	}
 
 	public OtpServiceException() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 }

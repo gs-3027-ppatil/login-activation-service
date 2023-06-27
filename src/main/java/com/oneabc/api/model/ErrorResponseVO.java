@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ErrorResponseVO {
 
-	private int statusCode;
+	private int errorCode;
+	private int status;
 	private String message;
+	private String source;
 }

@@ -37,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public OtpResponseVO sendOtp(String mobileNumber) {
 		if (ValidationUtils.isValidMobileNumber(mobileNumber)) {
-			OtpResponseVO res = createLoginResponse(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), "123456");
+			OtpResponseVO res = createLoginResponse(HttpStatus.OK.value(), "SUCCESS", "123456");
 			return res;
 		} else {
 			OtpResponseVO res = createLoginResponse(HttpStatus.BAD_REQUEST.value(), "Please enter valid mobile number",
@@ -99,11 +99,11 @@ public class LoginServiceImpl implements LoginService {
 				mpin.setCustomer(customerFromDB);
 				mpin.setActive(true);
 				pinMgtRepository.save(mpin);
+				return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
 			} catch (DataIntegrityViolationException e) {
 				return new ResponseVO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
 						"Duplicate entry. MPIN already set for customerId : " + customerFromDB.getId());
 			}
-			return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
 		} else {
 			return new ResponseVO(HttpStatus.NOT_FOUND.value(), "Customer does not exist");
 		}
@@ -117,7 +117,7 @@ public class LoginServiceImpl implements LoginService {
 			String mobilePin = updateMpinRequestVO.getMpin();
 			return updateMpin(customer, mobilePin);
 		} else {
-			return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Mobile number or OTP entered is incorrect");
+			return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Mobile number or MPIN entered is incorrect");
 		}
 	}
 

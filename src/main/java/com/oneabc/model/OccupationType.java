@@ -125,7 +125,6 @@ public class OccupationType {
 
 	public OccupationType() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public OccupationType(long id, Customer customer, String occupationType, String state, String createdby,

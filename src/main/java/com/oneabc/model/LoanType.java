@@ -118,7 +118,6 @@ public class LoanType {
 
 	public LoanType() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public LoanType(long id, Customer customer, String loanType, String createdby, String createddate,
