@@ -23,11 +23,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	private String sourceName;
 
 	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<Errors> handleOtpServiceException(OtpServiceException ex) {
+	protected ResponseEntity<Errors> handleOtpServiceException(Exception ex) {
 
 		Errors errors = new Errors();
 		List<ErrorResponseVO> errorList = new ArrayList<>();
-		getErrorList(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), ex.getStatusCode(), errorList);
+		getErrorList(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), 1000, errorList);
 		errors.setErrors(errorList);
 		return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

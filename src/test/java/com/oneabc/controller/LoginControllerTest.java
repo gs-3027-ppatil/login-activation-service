@@ -58,10 +58,10 @@ public class LoginControllerTest {
 		otpResponseVO.setStatusCode(HttpStatus.OK.value());
 		otpResponseVO.setMessage("SUCCESS");
 		otpResponseVO.setOtp("123456");
-		given(loginService.sendOtp(mobileNumber)).willThrow(new OtpServiceException(1001, "Some Exception"));
+		given(loginService.sendOtp(mobileNumber)).willThrow(new OtpServiceException(1000, "Some Exception"));
 
 		mockMvc.perform(get("/v1/login/otp").param("mobileNumber", mobileNumber)).andDo(print()).andExpect(status().isInternalServerError())
-				.andExpect(jsonPath("$.errors[0].errorCode", is(1001)))
+				.andExpect(jsonPath("$.errors[0].errorCode", is(1000)))
 				.andExpect(jsonPath("$.errors[0].status", is(500)))
 				.andExpect(jsonPath("$.errors[0].message", is("Some Exception")))
 				.andExpect(jsonPath("$.errors[0].source", is("login-activation-service")));
