@@ -100,8 +100,7 @@ public class LoginServiceImpl implements LoginService {
 				pinMgtRepository.save(mpin);
 				return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
 			} catch (DataIntegrityViolationException e) {
-				return new ResponseVO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-						"Duplicate entry. MPIN already set for customerId : " + customerFromDB.getId());
+				throw new OtpServiceException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Duplicate entry. MPIN already set for customerId : " + customerFromDB.getId());
 			}
 		} else {
 			return new ResponseVO(HttpStatus.NOT_FOUND.value(), "Customer does not exist");
