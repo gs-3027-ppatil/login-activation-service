@@ -17,6 +17,7 @@ import com.oneabc.api.model.OtpResponseVO;
 import com.oneabc.api.model.OtpVerificationRequestVO;
 import com.oneabc.api.model.ResponseVO;
 import com.oneabc.api.model.UpdateMpinRequestVO;
+import com.oneabc.exception.OtpServiceException;
 import com.oneabc.model.Customer;
 import com.oneabc.model.PinMgt;
 import com.oneabc.repository.CustomerRepository;
@@ -40,9 +41,7 @@ public class LoginServiceImpl implements LoginService {
 			OtpResponseVO res = createLoginResponse(HttpStatus.OK.value(), "SUCCESS", "123456");
 			return res;
 		} else {
-			OtpResponseVO res = createLoginResponse(HttpStatus.BAD_REQUEST.value(), "Please enter valid mobile number",
-					null);
-			return res;
+			throw new OtpServiceException(1099, "Invalid mobile number");
 		}
 	}
 
