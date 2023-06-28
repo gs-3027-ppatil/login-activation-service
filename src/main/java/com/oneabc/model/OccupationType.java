@@ -20,7 +20,7 @@ public class OccupationType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "OccupationType_seq_gen")
 	@SequenceGenerator(name = "OccupationType_seq_gen", sequenceName = "OccupationType_seq")
-	private long id;
+	private int id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
@@ -55,7 +55,7 @@ public class OccupationType {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -127,7 +127,7 @@ public class OccupationType {
 		super();
 	}
 
-	public OccupationType(long id, Customer customer, String occupationType, String state, String createdby,
+	public OccupationType(int id, Customer customer, String occupationType, String state, String createdby,
 			String createddate, String modifiedBy, String modififedDate, String active) {
 		super();
 		this.id = id;
