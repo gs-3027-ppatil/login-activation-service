@@ -170,10 +170,10 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	private LoginResponseVO validateMpin(Customer customerFromDB) {
-		Date mpinExpiry = customerFromDB.getMpin().getMpinExpiry();
-		Date currentDate = new Date();
 		if (customerFromDB.getMpin() != null && !Strings.isBlank(customerFromDB.getMpin().getCurrentMpin())) {
-			if (currentDate.compareTo(mpinExpiry) < 0) {
+			Date mpinExpiry = customerFromDB.getMpin().getMpinExpiry();
+			Date currentDate = new Date();
+			if (mpinExpiry != null && currentDate.compareTo(mpinExpiry) < 0) {
 				return new LoginResponseVO(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage(),
 						customerFromDB.getMpin().getCurrentMpin());
 			} else {
