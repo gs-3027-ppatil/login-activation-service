@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.oneabc.api.model.ErrorResponseVO;
 import com.oneabc.api.model.Errors;
+import com.oneabc.constant.ResponseEnum;
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,13 +28,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 		Errors errors = new Errors();
 		List<ErrorResponseVO> errorList = new ArrayList<>();
-		getErrorList(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), 1000, errorList);
+		getErrorList(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), ResponseEnum.FAILURE.getStatusCode(),
+				errorList);
 		errors.setErrors(errorList);
 		return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler(OtpServiceException.class)
-	protected ResponseEntity<Errors> handleOtpServiceException(OtpServiceException ex) {
+	@ExceptionHandler(CustomException.class)
+	protected ResponseEntity<Errors> handleCustomException(CustomException ex) {
 
 		Errors errors = new Errors();
 		List<ErrorResponseVO> errorList = new ArrayList<>();
@@ -56,9 +58,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		Errors errors = new Errors();
 		List<ErrorResponseVO> errorList = new ArrayList<>();
-		ex.getAllErrors().forEach(error -> {
-			getErrorList(ex.getStatusCode().value(), error.getDefaultMessage(), 1099, errorList);
-		});
+		ex.getAllErrors().forEach(error -> getErrorList(ex.getStatusCode().value(), error.getDefaultMessage(),
+				ResponseEnum.INVALID_REQUEST_BODY.getStatusCode(), errorList));
 		errors.setErrors(errorList);
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}

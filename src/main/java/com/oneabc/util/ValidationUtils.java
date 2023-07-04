@@ -5,7 +5,11 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.util.Strings;
 
-public class ValidationUtils {
+public final class ValidationUtils {
+	private ValidationUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
+
 	public static boolean isValidMobileNumber(String mobileNumber) {
 		if (Strings.isNotEmpty(mobileNumber)) {
 			Pattern p = Pattern.compile("^\\d{10}$");
