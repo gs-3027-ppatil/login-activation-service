@@ -1,25 +1,25 @@
 package com.oneabc.service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.oneabc.api.model.CreateMpinRequestVO;
+import com.oneabc.api.model.LoginResponseVO;
 import com.oneabc.api.model.OtpResponseVO;
 import com.oneabc.api.model.OtpVerificationRequestVO;
 import com.oneabc.api.model.ResponseVO;
 import com.oneabc.api.model.UpdateMpinRequestVO;
-import com.oneabc.exception.OtpServiceException;
-import com.oneabc.model.Customer;
-import com.oneabc.model.PinMgt;
+import com.oneabc.constant.ResponseEnum;
+import com.oneabc.entity.Customer;
+import com.oneabc.entity.PinMgt;
+import com.oneabc.exception.CustomException;
 import com.oneabc.repository.CustomerRepository;
 import com.oneabc.repository.PinMgtRepository;
 import com.oneabc.util.ValidationUtils;
@@ -37,11 +37,16 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public OtpResponseVO sendOtp(String mobileNumber) {
+		if (Strings.isBlank(mobileNumber)) {
+			throw new CustomException(ResponseEnum.EMPTY_MOBILE_NUMBER.getStatusCode(),
+					ResponseEnum.EMPTY_MOBILE_NUMBER.getMessage());
+		}
 		if (ValidationUtils.isValidMobileNumber(mobileNumber)) {
-			OtpResponseVO res = createLoginResponse(HttpStatus.OK.value(), "SUCCESS", "123456");
-			return res;
+			return createLoginResponse(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage(),
+					"123456");
 		} else {
-			throw new OtpServiceException(1099, "Invalid mobile number");
+			throw new CustomException(ResponseEnum.INVALID_MOBILE_NUMBER.getStatusCode(),
+					ResponseEnum.INVALID_MOBILE_NUMBER.getMessage());
 		}
 	}
 
@@ -55,91 +60,81 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public ResponseVO verifyOtp(OtpVerificationRequestVO otpVerificationRequestVO) {
-		if (otpVerificationRequestVO != null && ValidationUtils.isValidOtp(otpVerificationRequestVO.getOtp())
-				&& ValidationUtils.isValidMobileNumber(otpVerificationRequestVO.getMobileNumber())) {
+		if (otpVerificationRequestVO != null) {
 			if (otpVerificationRequestVO.getOtp().equals("123456")) {
-				return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
+				return new ResponseVO(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage());
 			} else {
-				return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Invalid OTP");
+				return new ResponseVO(ResponseEnum.INVALID_OTP.getStatusCode(), ResponseEnum.INVALID_OTP.getMessage());
 			}
 		} else {
-			return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Mobile number or OTP entered is incorrect");
+			return new ResponseVO(ResponseEnum.INVALID_REQUEST_BODY.getStatusCode(),
+					ResponseEnum.INVALID_REQUEST_BODY.getMessage());
 		}
 	}
 
 	@Override
 	public ResponseVO setMpin(CreateMpinRequestVO createMpinRequestVO) {
-		if (createMpinRequestVO != null && ValidationUtils.isValidMpin(createMpinRequestVO.getMpin())) {
+		if (createMpinRequestVO != null) {
 			Optional<Customer> customer = customerRepository.findById(createMpinRequestVO.getCustomerId());
 			String mobilePin = createMpinRequestVO.getMpin();
 			return saveMpin(customer, mobilePin);
 		} else {
-			return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Customer Id or OTP entered is incorrect");
+			return new ResponseVO(ResponseEnum.INVALID_REQUEST_BODY.getStatusCode(),
+					ResponseEnum.INVALID_REQUEST_BODY.getMessage());
 		}
 	}
 
-	private ResponseVO saveMpin(Optional<Customer> customer, String mobilePin) {
+	private ResponseVO saveMpin(Optional<Customer> customer, String mpin) {
 		if (customer.isPresent()) {
-			String hashedMpin = "";
-			try {
-				hashedMpin = generateMpinHash(mobilePin);
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				return new ResponseVO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Invalid hashing algorithm");
-			}
-
 			Customer customerFromDB = customer.get();
 			try {
-				PinMgt mpin = new PinMgt();
-				mpin.setCurrentMpin(hashedMpin);
-				mpin.setCreatedBy(getCustomerFullName(customerFromDB.getFirstName(), customerFromDB.getLastName()));
-				mpin.setCreatedDate(new Date());
-				mpin.setMpinExpiry(getMpinExpiryDate());
-				mpin.setCustomer(customerFromDB);
-				mpin.setActive(true);
-				pinMgtRepository.save(mpin);
-				return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
+				PinMgt mpinFromDB = new PinMgt();
+				mpinFromDB.setCurrentMpin(mpin);
+				mpinFromDB
+						.setCreatedBy(getCustomerFullName(customerFromDB.getFirstName(), customerFromDB.getLastName()));
+				mpinFromDB.setCreatedDate(new Date());
+				mpinFromDB.setMpinExpiry(getMpinExpiryDate());
+				mpinFromDB.setCustomer(customerFromDB);
+				mpinFromDB.setActive(true);
+				pinMgtRepository.save(mpinFromDB);
+				return new ResponseVO(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage());
 			} catch (DataIntegrityViolationException e) {
-				throw new OtpServiceException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Duplicate entry. MPIN already set for customerId : " + customerFromDB.getId());
+				throw new CustomException(ResponseEnum.DUPLICATE_MPIN_ENTRY.getStatusCode(),
+						ResponseEnum.DUPLICATE_MPIN_ENTRY.getMessage());
 			}
 		} else {
-			return new ResponseVO(HttpStatus.NOT_FOUND.value(), "Customer does not exist");
+			return new ResponseVO(ResponseEnum.CUSTOMER_NOT_FOUND.getStatusCode(),
+					ResponseEnum.CUSTOMER_NOT_FOUND.getMessage());
 		}
 	}
 
 	@Override
 	public ResponseVO updateMpin(UpdateMpinRequestVO updateMpinRequestVO) {
-		if (updateMpinRequestVO != null && ValidationUtils.isValidMobileNumber(updateMpinRequestVO.getMobileNumber())
-				&& ValidationUtils.isValidMpin(updateMpinRequestVO.getMpin())) {
+		if (updateMpinRequestVO != null) {
 			Optional<Customer> customer = customerRepository.findByMobileNumber(updateMpinRequestVO.getMobileNumber());
 			String mobilePin = updateMpinRequestVO.getMpin();
 			return updateMpin(customer, mobilePin);
 		} else {
-			return new ResponseVO(HttpStatus.BAD_REQUEST.value(), "Mobile number or MPIN entered is incorrect");
+			return new ResponseVO(ResponseEnum.INVALID_REQUEST_BODY.getStatusCode(),
+					ResponseEnum.INVALID_REQUEST_BODY.getMessage());
 		}
 	}
 
-	private ResponseVO updateMpin(Optional<Customer> customer, String mobilePin) {
+	private ResponseVO updateMpin(Optional<Customer> customer, String mpin) {
 		if (customer.isPresent()) {
-			String hashedMpin = "";
-			try {
-				hashedMpin = generateMpinHash(mobilePin);
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				return new ResponseVO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Invalid hashing algorithm");
-			}
-
 			Customer customerFromDB = customer.get();
 			if (customerFromDB.getMpin() != null) {
-				pinMgtRepository.updateMpin(hashedMpin,
+				pinMgtRepository.updateMpin(mpin,
 						getCustomerFullName(customerFromDB.getFirstName(), customerFromDB.getLastName()), new Date(),
 						customerFromDB.getMpin().getId());
-				return new ResponseVO(HttpStatus.OK.value(), "SUCCESS");
+				return new ResponseVO(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage());
 			} else {
-				return new ResponseVO(HttpStatus.NOT_FOUND.value(), "Failed to update MPIN, no entry found");
+				return new ResponseVO(ResponseEnum.MPIN_NOT_FOUND.getStatusCode(),
+						ResponseEnum.MPIN_NOT_FOUND.getMessage());
 			}
 		} else {
-			return new ResponseVO(HttpStatus.NOT_FOUND.value(), "Customer does not exist");
+			return new ResponseVO(ResponseEnum.CUSTOMER_NOT_FOUND.getStatusCode(),
+					ResponseEnum.CUSTOMER_NOT_FOUND.getMessage());
 		}
 	}
 
@@ -154,7 +149,40 @@ public class LoginServiceImpl implements LoginService {
 		return c.getTime();
 	}
 
-	private String generateMpinHash(String mpin) throws NoSuchAlgorithmException {
-		return DigestUtils.sha256Hex(mpin);
+	@Override
+	public LoginResponseVO login(String mobileNumber) {
+		if (Strings.isBlank(mobileNumber)) {
+			throw new CustomException(ResponseEnum.EMPTY_MOBILE_NUMBER.getStatusCode(),
+					ResponseEnum.EMPTY_MOBILE_NUMBER.getMessage());
+		}
+		if (ValidationUtils.isValidMobileNumber(mobileNumber)) {
+			Optional<Customer> customer = customerRepository.findByMobileNumber(mobileNumber);
+			if (customer.isPresent()) {
+				return validateMpin(customer.get());
+			} else {
+				return new LoginResponseVO(ResponseEnum.CUSTOMER_NOT_FOUND.getStatusCode(),
+						ResponseEnum.CUSTOMER_NOT_FOUND.getMessage(), null);
+			}
+		} else {
+			throw new CustomException(ResponseEnum.INVALID_MOBILE_NUMBER.getStatusCode(),
+					ResponseEnum.INVALID_MOBILE_NUMBER.getMessage());
+		}
+	}
+
+	private LoginResponseVO validateMpin(Customer customerFromDB) {
+		Date mpinExpiry = customerFromDB.getMpin().getMpinExpiry();
+		Date currentDate = new Date();
+		if (customerFromDB.getMpin() != null && !Strings.isBlank(customerFromDB.getMpin().getCurrentMpin())) {
+			if (currentDate.compareTo(mpinExpiry) < 0) {
+				return new LoginResponseVO(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage(),
+						customerFromDB.getMpin().getCurrentMpin());
+			} else {
+				return new LoginResponseVO(ResponseEnum.MPIN_EXPIRED.getStatusCode(),
+						ResponseEnum.MPIN_EXPIRED.getMessage(), null);
+			}
+		} else {
+			return new LoginResponseVO(ResponseEnum.MPIN_NOT_FOUND.getStatusCode(),
+					ResponseEnum.MPIN_NOT_FOUND.getMessage(), null);
+		}
 	}
 }

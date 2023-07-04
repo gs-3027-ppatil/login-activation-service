@@ -1,4 +1,4 @@
-package com.oneabc.model;
+package com.oneabc.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -14,40 +14,41 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "T_OccupationType")
-public class OccupationType {
-
+@Table(name = "T_LoanType")
+public class LoanType {
+	
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "OccupationType_seq_gen")
-	@SequenceGenerator(name = "OccupationType_seq_gen", sequenceName = "OccupationType_seq")
-	private int id;
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_seq_gen")
+    @SequenceGenerator(name = "loan_seq_gen", sequenceName = "loan_seq")
+	private long id;
+	
+	
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id")
 	@JsonBackReference
     private Customer customer;
 	
 	
-	@Column(name = "OccupationType")
-	private String occupationType;
-
-	@Column(name = "State")
-	private String state;
-
-	@Column(name = "CreatedBy")
+	@Column(name = "LoanType")
+	private String loanType;
+	
+	@Column(name = "Createdby")
 	private String createdby;
-
-	@Column(name = "CreatedDate")
+	
+	@Column(name = "Createddate")
 	private String createddate;
-
+	
 	@Column(name = "ModifiedBy")
 	private String modifiedBy;
-
+	
 	@Column(name = "ModififedDate")
 	private String modififedDate;
-
+	
 	@Column(name = "Active")
 	private String active;
+	
 	
 	
 
@@ -55,7 +56,7 @@ public class OccupationType {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -67,20 +68,12 @@ public class OccupationType {
 		this.customer = customer;
 	}
 
-	public String getOccupationType() {
-		return occupationType;
+	public String getLoanType() {
+		return loanType;
 	}
 
-	public void setOccupationType(String occupationType) {
-		this.occupationType = occupationType;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
+	public void setLoanType(String loanType) {
+		this.loanType = loanType;
 	}
 
 	public String getCreatedby() {
@@ -123,17 +116,16 @@ public class OccupationType {
 		this.active = active;
 	}
 
-	public OccupationType() {
+	public LoanType() {
 		super();
 	}
 
-	public OccupationType(int id, Customer customer, String occupationType, String state, String createdby,
-			String createddate, String modifiedBy, String modififedDate, String active) {
+	public LoanType(long id, Customer customer, String loanType, String createdby, String createddate,
+			String modifiedBy, String modififedDate, String active) {
 		super();
 		this.id = id;
 		this.customer = customer;
-		this.occupationType = occupationType;
-		this.state = state;
+		this.loanType = loanType;
 		this.createdby = createdby;
 		this.createddate = createddate;
 		this.modifiedBy = modifiedBy;
@@ -145,5 +137,4 @@ public class OccupationType {
 	
 	
 	
-
 }

@@ -1,4 +1,4 @@
-package com.oneabc.model;
+package com.oneabc.entity;
 
  
 

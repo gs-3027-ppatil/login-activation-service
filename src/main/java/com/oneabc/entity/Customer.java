@@ -1,11 +1,11 @@
-package com.oneabc.model;
+package com.oneabc.entity;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.oneabc.model.Kyc;
-import com.oneabc.model.LoanType;
-import com.oneabc.model.OccupationType;
+import com.oneabc.entity.Kyc;
+import com.oneabc.entity.LoanType;
+import com.oneabc.entity.OccupationType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

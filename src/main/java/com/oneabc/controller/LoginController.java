@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oneabc.api.model.CreateMpinRequestVO;
+import com.oneabc.api.model.LoginResponseVO;
 import com.oneabc.api.model.OtpResponseVO;
 import com.oneabc.api.model.OtpVerificationRequestVO;
 import com.oneabc.api.model.ResponseVO;
@@ -23,7 +24,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/v1/login")
+@RequestMapping("/adityabirla/api/v1/login")
 public class LoginController {
 	@Autowired
 	private LoginService loginService;
@@ -53,5 +54,11 @@ public class LoginController {
 	public ResponseEntity<ResponseVO> updateMpin(@Valid @RequestBody UpdateMpinRequestVO updateMpinRequestVO) {
 		ResponseVO response = loginService.updateMpin(updateMpinRequestVO);
 		return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping
+	public ResponseEntity<LoginResponseVO> login(@RequestParam(name = "mobileNumber") String mobileNumber) {
+		LoginResponseVO response = loginService.login(mobileNumber);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
