@@ -2,6 +2,8 @@ package com.oneabc.entity;
 
  
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -33,20 +35,20 @@ public class Kyc {
 	
 	 
 	
-	@Column(name = "PermanentAddress")
+	@Column(name = "permanentaddress")
 	private String permanentAddress;
 	
-	@Column(name = "DigilockerStatus")
+	@Column(name = "digilockerstatus")
 	private String digilockerStatus;
 	
-	@Column(name = "DigilockerCreatedDate")
+	@Column(name = "digilockercreateddate")
 	private String digilockerCreatedDate;
 	
-	@Column(name = "VideoKYC")
+	@Column(name = "videokyc")
 	private String videoKYC;
 	
-	@Column(name = "LastFetchedDT")
-	private String lastFetchedDT;
+	@Column(name = "lastfetcheddt")
+	private Date lastFetchedDT;
 
 	
 	
@@ -99,20 +101,15 @@ public class Kyc {
 		this.videoKYC = videoKYC;
 	}
 
-	public String getLastFetchedDT() {
-		return lastFetchedDT;
-	}
-
-	public void setLastFetchedDT(String lastFetchedDT) {
-		this.lastFetchedDT = lastFetchedDT;
-	}
+	 
 
 	public Kyc() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public Kyc(long id, Customer customer, String permanentAddress, String digilockerStatus,
-			String digilockerCreatedDate, String videoKYC, String lastFetchedDT) {
+			String digilockerCreatedDate, String videoKYC, Date lastFetchedDT) {
 		super();
 		this.id = id;
 		this.customer = customer;
@@ -122,6 +119,8 @@ public class Kyc {
 		this.videoKYC = videoKYC;
 		this.lastFetchedDT = lastFetchedDT;
 	}
+
+	 
 	
 }
 	

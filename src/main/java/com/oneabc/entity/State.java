@@ -1,5 +1,7 @@
 package com.oneabc.entity;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -10,47 +12,39 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "T_LoanType")
-public class LoanType {
-	
-	
+@Table(name = "T_State")
+public class State {
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_seq_gen")
-    @SequenceGenerator(name = "loan_seq_gen", sequenceName = "loan_seq")
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id")
-	@JsonBackReference
-    private Customer customer;
-	
-	
-	@Column(name = "loantype")
-	private String loanType;
-	
+
+	@Column(name = "state")
+	private String state;
+
 	@Column(name = "createdby")
 	private String createdby;
-	
+
 	@Column(name = "createddate")
-	private String createddate;
-	
+	private Date createddate;
+
 	@Column(name = "modifiedby")
 	private String modifiedBy;
-	
+
 	@Column(name = "modifieddate")
-	private String modifiedDate;
-	
+	private Date modifiedDate;
+
 	@Column(name = "active")
 	private String active;
-	
-	
-	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "address_id")
+	@JsonBackReference
+	private Address address;
 
 	public long getId() {
 		return id;
@@ -60,20 +54,12 @@ public class LoanType {
 		this.id = id;
 	}
 
-	public Customer getCustomer() {
-		return customer;
+	public String getState() {
+		return state;
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public String getLoanType() {
-		return loanType;
-	}
-
-	public void setLoanType(String loanType) {
-		this.loanType = loanType;
+	public void setState(String state) {
+		this.state = state;
 	}
 
 	public String getCreatedby() {
@@ -84,11 +70,11 @@ public class LoanType {
 		this.createdby = createdby;
 	}
 
-	public String getCreateddate() {
+	public Date getCreateddate() {
 		return createddate;
 	}
 
-	public void setCreateddate(String createddate) {
+	public void setCreateddate(Date createddate) {
 		this.createddate = createddate;
 	}
 
@@ -100,11 +86,11 @@ public class LoanType {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getModifiedDate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(String modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
@@ -116,25 +102,30 @@ public class LoanType {
 		this.active = active;
 	}
 
-	public LoanType() {
-		super();
+	public Address getAddress() {
+		return address;
 	}
 
-	public LoanType(long id, Customer customer, String loanType, String createdby, String createddate,
-			String modifiedBy, String modifiedDate, String active) {
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public State() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public State(long id, String state, String createdby, Date createddate, String modifiedBy, Date modifiedDate,
+			String active, Address address) {
 		super();
 		this.id = id;
-		this.customer = customer;
-		this.loanType = loanType;
+		this.state = state;
 		this.createdby = createdby;
 		this.createddate = createddate;
 		this.modifiedBy = modifiedBy;
 		this.modifiedDate = modifiedDate;
 		this.active = active;
+		this.address = address;
 	}
-	
-	
-	
-	
-	
+
 }

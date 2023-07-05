@@ -53,7 +53,7 @@ public class LoginController {
 	@PatchMapping(value = "/mpin/update")
 	public ResponseEntity<ResponseVO> updateMpin(@Valid @RequestBody UpdateMpinRequestVO updateMpinRequestVO) {
 		ResponseVO response = loginService.updateMpin(updateMpinRequestVO);
-		return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	@GetMapping

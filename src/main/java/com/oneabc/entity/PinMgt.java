@@ -26,22 +26,22 @@ public class PinMgt {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = "currentMpin")
+	@Column(name = "currentmpin")
 	private String currentMpin;
 
-	@Column(name = "mpinExpiry")
+	@Column(name = "mpinexpiry")
 	private Date mpinExpiry;
 
-	@Column(name = "createdBy")
+	@Column(name = "createdby")
 	private String createdBy;
 
-	@Column(name = "createdDate")
+	@Column(name = "createddate")
 	private Date createdDate;
 	
-	@Column(name = "modifiedDate")
+	@Column(name = "modifieddate")
 	private Date modifiedDate;
 
-	@Column(name = "modifiedBy")
+	@Column(name = "modifiedby")
 	private String modifiedBy;
 	
 	@Column(name = "active")
