@@ -45,7 +45,7 @@ public class PinMgt {
 	private String modifiedBy;
 	
 	@Column(name = "active")
-	private boolean active;
+	private String active;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_cust_id")

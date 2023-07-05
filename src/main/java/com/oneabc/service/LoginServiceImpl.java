@@ -95,7 +95,7 @@ public class LoginServiceImpl implements LoginService {
 				mpinFromDB.setCreatedDate(new Date());
 				mpinFromDB.setMpinExpiry(getMpinExpiryDate());
 				mpinFromDB.setCustomer(customerFromDB);
-				mpinFromDB.setActive(true);
+				mpinFromDB.setActive("Y");
 				pinMgtRepository.save(mpinFromDB);
 				return new ResponseVO(ResponseEnum.SUCCESS.getStatusCode(), ResponseEnum.SUCCESS.getMessage());
 			} catch (DataIntegrityViolationException e) {
