@@ -29,14 +29,4 @@ public final class ValidationUtils {
 			return false;
 		}
 	}
-
-	public static boolean isValidMpin(String mPin) {
-		if (Strings.isNotEmpty(mPin)) {
-			Pattern p = Pattern.compile("^\\d{4}$");
-			Matcher m = p.matcher(mPin);
-			return m.matches();
-		} else {
-			return false;
-		}
-	}
 }

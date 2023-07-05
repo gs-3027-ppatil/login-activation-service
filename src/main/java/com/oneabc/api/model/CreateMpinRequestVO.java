@@ -10,6 +10,5 @@ public class CreateMpinRequestVO {
 	@NotNull(message = "Customer Id cannot be null")
 	private Long customerId;
 	@NotEmpty(message = "MPIN cannot be empty")
-	@Size(min = 4, max = 4, message = "Invalid MPIN")
 	private String mpin;
 }

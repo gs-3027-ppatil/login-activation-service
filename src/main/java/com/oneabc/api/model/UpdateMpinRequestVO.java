@@ -10,6 +10,5 @@ public class UpdateMpinRequestVO {
 	@Size(min = 10, max = 10, message = "Invalid mobile number")
 	private String mobileNumber;
 	@NotEmpty(message = "MPIN cannot be empty")
-	@Size(min = 4, max = 4, message = "Invalid MPIN")
 	private String mpin;
 }
