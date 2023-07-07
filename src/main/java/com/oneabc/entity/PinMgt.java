@@ -48,6 +48,6 @@ public class PinMgt {
 	private String active;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_cust_id")
+	@JoinColumn(name = "customerid")
 	private Customer customer;
 }
